@@ -22,4 +22,4 @@ All the code should compile and the App should be running on http://localhost:80
 
 Double click on backend.sln, this should open up the solution in Visual Studio. Then click F5 to run the solution.
 
-#### Once both the front and back end are running, fill in the form to and see the Google rank of searches!
+#### Once both the front and back end are running, fill in the form and see the Google rank of your search terms!
