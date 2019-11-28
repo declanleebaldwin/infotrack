@@ -1,18 +1,25 @@
-# Separated frontend and backend projects
-This approach keeps the ASP.NET Core and Vue.js applications separately.
-Developers will independently start each application and can use different tooling/editors/debuggers with each.
+# InfoTrack Development Test
 
-During development, you still ca use the same domain to access both frontend and backend side.
-You just need to setup a proxy in one of the 2 following ways:
+To complete this test I have created a .Net Core Web API along with a Vue.js SPA application.
 
-- (Recommended) Add a `vue.config.js` file inside the frontend folder with the following contents in order to setup a proxy from the frontend Vue development server to the backend IISExpress/Kestrel server. Then use the Vue development server URL in your browser, and send requests to the backend API using the current domain.
+## Front End Setup
 
-      module.exports = {
-        // The URL where the .Net Core app will be listening.
-        // Specific URL depends on whether IISExpress/Kestrel and HTTP/HTTPS are used
-        devServer: {
-          proxy: 'https://localhost:5001'
-        }
-      }
+Navigate to the root of the 'front end' folder and run:
 
-- Add the `spa.UseProxyToSpaDevelopmentServer("http://localhost:8080/");` middleware to the backend application in order to setup a proxy from the backend to the frontend Vue development server. Then use the IISExpress/Kestrel URL in your browser, and send requests to the backend API using the current domain.
+```
+npm install
+```
+
+After the packages have been downloaded run:
+
+```
+npm run serve
+```
+
+All the code should compile and the App should be running on http://localhost:8080/
+
+## Back End Setup
+
+Double click on backend.sln, this should open up the solution in Visual Studio. Then click F5 to run the solution.
+
+#### Once both the front and back end are running, fill in the form to and see the Google rank of searches!

@@ -21,17 +21,19 @@
               <div class="field">
                 <label class="label">Search Terms</label>
                 <div class="control">
-                  <input class="input" v-model="search" type="text" placeholder="e.g land registry searches" />
+                  <input class="input" :class="{'is-danger': error.search}" v-model="search" type="text" placeholder="e.g land registry searches" @input="validateSearch" @blur="validateSearch"/>
                 </div>
+                <p class="help is-danger" v-show="error.search">Please enter a search term</p>
               </div>
               <div class="field">
                 <label class="label">URL</label>
                 <div class="control">
-                  <input class="input" v-model="url" type="text" placeholder="e.g. www.infotrack.co.uk" />
+                  <input class="input" :class="{'is-danger': error.url}" v-model="url" type="text" placeholder="e.g. www.infotrack.co.uk" @input="validateURL" @blur="validateURL"/>
                 </div>
+                <p class="help is-danger" v-show="error.url">Please enter a URL</p>
               </div>
               <div class="control">
-                <button v-show="!loading" @click="onSubmit" class="button is-primary">Submit</button>
+                <button v-show="!loading" @mousedown="validateForm" class="button is-primary">Submit</button>
                 <div v-show="loading" class="loader"></div>
               </div>
               <h5 v-show="this.googleRank.length > 0 && showResult" class="title mt is-5">Your URL was ranked {{ googleRankString }} in Google's top 100 results.</h5>
@@ -45,35 +47,58 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
 export default {
-  name: "home",
-  data() {
+  name: 'home',
+  data () {
     return {
       loading: false,
-      search: "",
-      url: "",
+      search: '',
+      url: '',
       googleRank: [],
-      showResult: false
-    };
+      showResult: false,
+      error: {
+        search: false,
+        url: false
+      }
+    }
   },
   methods: {
-    async onSubmit() {
-      let $this = this;
+    validateForm () {
+      this.validateSearch()
+      this.validateURL()
+      if (this.error.search || this.error.url) return
+      this.submitForm()
+    },
+    validateSearch () {
+      if (this.search === '') {
+        this.error.search = true
+      } else {
+        this.error.search = false
+      }
+    },
+    validateURL () {
+      if (this.url === '') {
+        this.error.url = true
+      } else {
+        this.error.url = false
+      }
+    },
+    async submitForm () {
+      let $this = this
       try {
-        this.showResult = false;
-        this.loading = true;
-        const response = await axios.post("https://localhost:44393/api/values", {
+        this.showResult = false
+        this.loading = true
+        const response = await axios.post('https://localhost:44393/api/ranks', {
           SearchTerm: $this.search,
           URL: $this.url
-        });
-        $this.loading = false;
-        this.showResult = true;
-        console.log(response);
-        $this.googleRank = response.data;
+        })
+        $this.loading = false
+        this.showResult = true
+        $this.googleRank = response.data
       } catch (error) {
-        $this.loading = false;
-        console.error(error);
+        $this.loading = false
+        console.error(error)
       }
     }
   },
@@ -82,7 +107,7 @@ export default {
       return this.googleRank.join(', ')
     }
   }
-};
+}
 </script>
 
 <style lang="css" scoped>
